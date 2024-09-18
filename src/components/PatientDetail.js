@@ -11,6 +11,13 @@ const PatientDetail = () => {
 
     const [PatientHistory, setPatientHistory] = useState([]);
     const [activitylog_id, setActivityLogId] = useState("");
+
+    const [PatientPrescription, setPatientPrescription] = useState([]);
+    const [prescription_id, setPrescriptionId] = useState("");
+
+    const [PatientDiagnosticTest, setPatientDiagnosticTest] = useState([]);
+    const [diagnostictest_id, setDiagnosticTestId] = useState("");
+
     const [name, setName] = useState("");
     const [age, setAge] = useState("");
     const [gender, setGender] = useState("");
@@ -22,7 +29,7 @@ const PatientDetail = () => {
     const apiURL = process.env.REACT_APP_API_URL
 
     const getPatientHistory = () => {
-        fetch(apiURL + 'patienthistory' + patient_id)
+        fetch(apiURL + 'patienthistory/' + patient_id)
             .then((res)=>{
                 return res.json();
             })
@@ -40,6 +47,46 @@ const PatientDetail = () => {
             })
             
     }    
+
+    const getPatientPrescription = () => {
+        fetch(apiURL + 'patientprescription/' + patient_id)
+            .then((res)=>{
+                return res.json();
+            })
+            .then((data)=>{
+                if(data.data) {
+                    setPatientPrescription(data.data);
+                     console.log(data.data);
+                }
+                else {
+                    console.log("No Prescirpiton for this Patient Exists.");
+                }
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+            
+    }
+
+    const getDiagnosticTest = () => {
+        fetch(apiURL + 'patientdiagnostictest/' + patient_id)
+            .then((res)=>{
+                return res.json();
+            })
+            .then((data)=>{
+                if(data.data) {
+                    setPatientDiagnosticTest(data.data);
+                     console.log(data.data);
+                }
+                else {
+                    console.log("No Diagnostic Test for this Patient Exists.");
+                }
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+            
+    }
 
     const getPatient = () => {
         fetch(apiURL + 'patient/' + patient_id)
@@ -69,6 +116,8 @@ const PatientDetail = () => {
     useEffect(() => {
         getPatient()
         getPatientHistory()
+        getPatientPrescription()
+        getDiagnosticTest()
     }, [])
 
 
@@ -96,19 +145,36 @@ const PatientDetail = () => {
 
                         <Card.Body>
                             <Tabs
-                                defaultActiveKey="anamnesis"
+                                defaultActiveKey="prescriptions"
                                 id="justify-tab-example"
                                 className="mb-3"
                                 justify
                                 >
-                                <Tab eventKey="anamnesis" title="Anamnesis">
-                                    Tab content for Home
+                                <Tab eventKey="prescriptions" title="Prescriptions">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Doctor_ID</th>
+                                                <th>Description</th>
+                                                <th>Medicines</th>
+                                                <th>Next Visit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {PatientPrescription.map(item => (
+                                                <tr key={item.prescription_id}>
+                                                    <td>{item.doctor_id}</td>
+                                                    <td>{item.description}</td>
+                                                    <td>{item.medicines}</td>
+                                                    <td>{item.next_visit}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </Tab>
-                                <Tab eventKey="care-plan" title="Care Plan">
+
+                                <Tab eventKey="diagnostic_test" title="Diagnostic Test">
                                     Tab content for Profile
-                                </Tab>
-                                <Tab eventKey="lab-results" title="Lab Results">
-                                    Tab content for Loooonger Tab
                                 </Tab>
                                 <Tab eventKey="patient-profile" title="Patient Profile">
                                     Tab content for Contact
@@ -126,7 +192,7 @@ const PatientDetail = () => {
                                         Acute abdominal pain
                                     </div>
                                     <div style={{color:"black"}}>
-                                        Throat pain
+                                        {disease}
                                     </div>
                                 </div>
                             </Col>
@@ -143,18 +209,33 @@ const PatientDetail = () => {
                             <strong>History</strong>
                         </Card.Header>
                         <Card.Body>
-                            {PatientHistory.map(item => (
-                            <Card key={item.activitylog_id}>
-                                <Card.Body>
-                                    <p style={{ margin: 0 }}>
-                                        {name}
-                                        <strong> {item.remarks}</strong>
-                                    </p>
-                                    <p>{item.date} {item.time}</p>
-                                    <hr/>
-                                </Card.Body>
-                            </Card>
-                            ))}
+                            {PatientHistory.map(item => {
+                                
+                                let remarksColor = {};
+
+                                if (item.remarks.includes('deleted')) {
+                                    remarksColor = { color: 'red' };
+                                } else if (item.remarks.includes('added')) {
+                                    remarksColor = { color: 'green' };
+                                } else if (item.remarks.includes('updated')) {
+                                    remarksColor = { color: 'blue' };
+                                } else if (item.remarks.includes('admitted')) {
+                                    remarksColor = { color: 'brown' };
+                                }
+
+                                return (
+                                    <Card key={item.activitylog_id}>
+                                        <Card.Body>
+                                            <p style={{ margin: 0 }}>
+                                                {name}
+                                                <strong style={remarksColor}> {item.remarks}</strong>
+                                            </p>
+                                            <p>{item.date} {item.time}</p>
+                                            <hr />
+                                        </Card.Body>
+                                    </Card>
+                                );
+                            })}
                         </Card.Body>
                     </Card>
                 </Col>

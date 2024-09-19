@@ -174,7 +174,26 @@ const PatientDetail = () => {
                                 </Tab>
 
                                 <Tab eventKey="diagnostic_test" title="Diagnostic Test">
-                                    Tab content for Profile
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Doctor_ID</th>
+                                                <th>Description</th>
+                                                <th>Tests</th>
+                                                <th>Result</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {PatientDiagnosticTest.map(item => (
+                                                <tr key={item.diagnostictest_id}>
+                                                    <td>{item.doctor_id}</td>
+                                                    <td>{item.description}</td>
+                                                    <td>{item.tests}</td>
+                                                    <td>{item.results}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </Tab>
                                 <Tab eventKey="patient-profile" title="Patient Profile">
                                     Tab content for Contact

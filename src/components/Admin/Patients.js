@@ -20,6 +20,9 @@ const Patients = () => {
     const [name, setName] = useState("");
     const [age, setAge] = useState("");
     const [gender, setGender] = useState("");
+    const [height, setHeight] = useState("");
+    const [weight, setWeight] = useState("");
+    const [attendee, setAttendee] = useState("");
     const [phn_num, setPhnNum] = useState("");
     const [disease, setDisease] = useState("");
     const [doctor_id, setDoctorId] = useState("");
@@ -90,6 +93,9 @@ const Patients = () => {
                 body:JSON.stringify({
                     name: name,
                     gender: gender,
+                    height: height,
+                    weight: weight,
+                    attendee: attendee,
                     age: age,
                     disease: disease,
                     phn_num: phn_num,
@@ -131,10 +137,13 @@ const Patients = () => {
         }
     }
 
-    const editPatient = (id, name, gender, age, disease, phn_num, doctor_id, status) => {
+    const editPatient = (id, name, gender, height, weight, attendee, age, disease, phn_num, doctor_id, status) => {
         setPatientId(id);
         setName(name);
-        setGender(gender) ;
+        setGender(gender);
+        setHeight(height);
+        setWeight(weight);
+        setAttendee(attendee);
         setAge(age);
         setDisease(disease);
         setPhnNum(phn_num);
@@ -151,6 +160,9 @@ const Patients = () => {
         const urlEncodedData = new URLSearchParams();
         urlEncodedData.append('name',name);
         urlEncodedData.append('gender',gender);
+        urlEncodedData.append('height',height);
+        urlEncodedData.append('weight',weight);
+        urlEncodedData.append('attendee',attendee);
         urlEncodedData.append('age',age);
         urlEncodedData.append('disease',disease);
         urlEncodedData.append('phn_num',phn_num);
@@ -321,6 +333,30 @@ const Patients = () => {
                                 type="text"
                                 value={gender}
                                 onChange={(e) => setGender(e.target.value)}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Height</Form.Label>
+                            <Form.Control 
+                                type="text"
+                                value={height}
+                                onChange={(e) => setHeight(e.target.value)}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Weight</Form.Label>
+                            <Form.Control 
+                                type="text"
+                                value={weight}
+                                onChange={(e) => setWeight(e.target.value)}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Attendee</Form.Label>
+                            <Form.Control 
+                                type="text"
+                                value={attendee}
+                                onChange={(e) => setAttendee(e.target.value)}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3">

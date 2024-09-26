@@ -274,7 +274,7 @@ const Doctors = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>Gender</Form.Label>
+                            <Form.Label>Phone Number</Form.Label>
                             <MaskedInput
                                 mask={[/[0-9]/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
                                 placeholder="Enter Phone Number"
@@ -284,11 +284,11 @@ const Doctors = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>Phone Number</Form.Label>
+                            <Form.Label>Gender</Form.Label>
                             <Form.Control 
                                 type="text"
-                                value={phn_num}
-                                onChange={(e) => setPhnNum(e.target.value)}/>
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3">

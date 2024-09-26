@@ -329,10 +329,20 @@ const Patients = () => {
 
                         <Form.Group className="mb-3">
                             <Form.Label>Gender</Form.Label>
-                            <Form.Control 
-                                type="text"
-                                value={gender}
-                                onChange={(e) => setGender(e.target.value)}/>
+                            <Form.Check
+                                type="radio"
+                                label="Male"
+                                name="gender"
+                                value="Male"
+                                onChange={(e) => setGender(e.target.value)}
+                            />
+                            <Form.Check
+                                type="radio"
+                                label="Female"
+                                name="gender"
+                                value="Female"
+                                onChange={(e) => setGender(e.target.value)}
+                            />
                         </Form.Group>
 
                         <Form.Group className="mb-3">

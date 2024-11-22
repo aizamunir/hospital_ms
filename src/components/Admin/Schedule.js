@@ -11,6 +11,9 @@ const Schedule = () => {
 
     const [showAddToast, setShowAddToast] = useState(false);
 
+    const [doctors, setDoctors] = useState([]);
+    const [patients, setPatients] = useState([]);
+
     const [schedules, setSchedules] = useState([]);
     const [schedule_id, setScheduleId] = useState("");
     const [doctor_id, setDoctorId] = useState("");
@@ -30,6 +33,46 @@ const Schedule = () => {
     
 
     const apiUrl = process.env.REACT_APP_API_URL
+
+    const getDoctors = () => {
+        fetch(apiUrl + 'doctors')
+            .then((res)=>{
+                return res.json();
+                console.log(res.json());
+            })
+            .then((data)=>{
+                if(data.data) {
+                    setDoctors(data.data);
+                     console.log(data.data);
+                }
+                else {
+                    console.log("No Doctor Exists.");
+                }
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+            
+    }
+
+    const getPatients = () => {
+        fetch(apiUrl + 'patients')
+            .then((res)=>{
+                return res.json();
+            })
+            .then((data)=>{
+                if(data.data) {
+                    setPatients(data.data);
+                     console.log(data.data);
+                }
+                else {
+                    console.log("No Patient Exists.");
+                }
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+    }
 
     const getSchedules = () => {
         fetch(apiUrl + 'schedules')
@@ -148,6 +191,8 @@ const Schedule = () => {
 
     useEffect(() => {
         getSchedules()
+        getDoctors()
+        getPatients()
     }, []);
 
     return (
@@ -205,7 +250,7 @@ const Schedule = () => {
                     {
                             schedules.map(item => (
                                 <tr key={item.schedule_id}>
-                                    <td>{item.doctor_id}</td>
+                                    <td>{item.doctor.name}</td>
                                     <td>{item.date}</td>
                                     <td>{item.description}</td>
                                     <td>{item.start_time}</td>
@@ -245,11 +290,15 @@ const Schedule = () => {
                     
                     <Form>
                         <Form.Group className="mb-3">
-                            <Form.Label>Doctor ID</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                value={doctor_id}
-                                onChange={(e) => setDoctorId(e.target.value)}/>
+                            <Form.Label>Doctor</Form.Label>
+                            <Form.Select aria-label="Default select example" value={doctor_id} onChange={(e) => setDoctorId(e.target.value)}>
+                                <option value=''>Select...</option>
+                                {
+                                    doctors.map(item => (
+                                        <option key={item.doctor_id} value={item.doctor_id}>{item.name}</option>
+                                    ))
+                                }
+                            </Form.Select>
                         </Form.Group>
 
                         <Form.Group className="mb-3">

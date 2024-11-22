@@ -18,13 +18,18 @@ const PatientDetail = () => {
     const [PatientDiagnosticTest, setPatientDiagnosticTest] = useState([]);
     const [diagnostictest_id, setDiagnosticTestId] = useState("");
 
+    const [PatientData, setPatientData] = useState([]);
+
     const [name, setName] = useState("");
+    const [weight, setWeight] = useState("");
+    const [height, setHeight] = useState("");
     const [age, setAge] = useState("");
     const [gender, setGender] = useState("");
     const [phn_num, setPhnNum] = useState("");
     const [disease, setDisease] = useState("");
     const [doctor_id, setDoctorId] = useState("");
     const [status, setStatus] = useState("");
+    const [attendee, setAttendee] = useState("");
 
     const apiURL = process.env.REACT_APP_API_URL
 
@@ -103,6 +108,10 @@ const PatientDetail = () => {
                      setDisease(data.data.disease);
                      setDoctorId(data.data.doctor.doctor_id);
                      setStatus(data.data.status);
+                     setWeight(data.data.weight);
+                     setHeight(data.data.height);
+                     setStatus(data.data.status);
+                     setAttendee(data.data.attendee);
                 }
                 else {
                     console.log("No Patient Exists.");
@@ -123,7 +132,7 @@ const PatientDetail = () => {
 
     return(
         <>
-            <h1>Patient ID: {patient_id}</h1>
+            <h1>Patient Name: {name}</h1>
 
             <Row>
                 <Col md={8}>
@@ -136,8 +145,8 @@ const PatientDetail = () => {
                                         <br></br>
                                         <Badge variant="secondary" className="ml-2">{gender}</Badge> | 
                                         <Badge variant="light" className="ml-2">{age}</Badge> | 
-                                        <Badge variant="light" className="ml-2">112 lb</Badge> | 
-                                        <Badge variant="light" className="ml-2">5'5 ft</Badge>
+                                        <Badge variant="light" className="ml-2">{weight} lb</Badge> | 
+                                        <Badge variant="light" className="ml-2">{height} ft</Badge>
                                     </div>
                                 </Col>
                             </Row>
@@ -151,71 +160,146 @@ const PatientDetail = () => {
                                 justify
                                 >
                                 <Tab eventKey="prescriptions" title="Prescriptions">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Doctor_ID</th>
-                                                <th>Description</th>
-                                                <th>Medicines</th>
-                                                <th>Next Visit</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {PatientPrescription.map(item => (
-                                                <tr key={item.prescription_id}>
-                                                    <td>{item.doctor_id}</td>
-                                                    <td>{item.description}</td>
-                                                    <td>{item.medicines}</td>
-                                                    <td>{item.next_visit}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                    <Card className="bg-light text-dark">
+                                        <Card.Body>
+                                            {PatientPrescription.map(item => {
+                                                const daysUntilNextVisit = Math.floor((new Date(item.next_visit) - new Date(item.created_at)) / (1000 * 60 * 60 * 24));
+
+                                                return (
+                                                    <Card key={item.prescription_id} style={{ marginBottom: '10px' }}>
+                                                        <Card.Body>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                <p style={{ margin: 0 }}>
+                                                                    Dr. {item.doctor.name} prescribed
+                                                                </p>
+                                                                <p>{new Date(item.created_at).toLocaleDateString()}</p>
+                                                            </div>
+
+                                                            <div style={{ marginTop: '10px', display: 'flex', gap: '10px', alignItems: 'baseline' }}>
+                                                                <p style={{ margin: 0 }}>{item.medicines}</p>
+                                                                <p>({item.description})</p>
+                                                            </div>
+
+                                                            <hr />
+
+                                                            <div style={{ textAlign: 'left' }}>
+                                                                <p style={{ margin: 0 }}>
+                                                                    Next visit in <strong>{daysUntilNextVisit} days</strong> on {new Date(item.next_visit).toLocaleDateString()}
+                                                                </p>
+                                                            </div>
+                                                        </Card.Body>
+                                                    </Card>
+                                                );
+                                            })}
+                                        </Card.Body>
+                                    </Card>
                                 </Tab>
 
                                 <Tab eventKey="diagnostic_test" title="Diagnostic Test">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Doctor_ID</th>
-                                                <th>Description</th>
-                                                <th>Tests</th>
-                                                <th>Result</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {PatientDiagnosticTest.map(item => (
-                                                <tr key={item.diagnostictest_id}>
-                                                    <td>{item.doctor_id}</td>
-                                                    <td>{item.description}</td>
-                                                    <td>{item.tests}</td>
-                                                    <td>{item.results}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                    <Card className="bg-light text-dark">
+                                        <Card.Body>
+                                            {PatientDiagnosticTest.map(item => {
+                                                return (
+                                                    <Card key={item.diagnostictest_id} style={{ marginBottom: '10px' }}>
+                                                        <Card.Body>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                <p style={{ margin: 0 }}>
+                                                                    Dr. {item.doctor.name} prescribed the following test,
+                                                                </p>
+                                                                <p>{new Date(item.created_at).toLocaleDateString()}</p>
+                                                            </div>
+
+                                                            <div style={{ marginTop: '10px' }}>
+                                                                <p style={{ margin: 0 }}> Test: {item.tests}</p>
+                                                            </div>
+
+                                                            <hr />
+
+                                                            <div style={{ textAlign: 'left' }}>
+                                                                <p style={{ margin: 0 }}>
+                                                                    <strong>RESULT - {item.result}</strong>
+                                                                </p>
+                                                            </div>
+
+                                                            <div style={{ marginTop: '10px' }}>
+                                                                <p style={{ margin: 0 }}> Description: {item.description}</p>
+                                                            </div>
+
+                                                        </Card.Body>
+                                                    </Card>
+                                                );
+                                            })}
+                                        </Card.Body>
+                                    </Card>
                                 </Tab>
+
                                 <Tab eventKey="patient-profile" title="Patient Profile">
-                                    Tab content for Contact
+                                    <Card className="bg-light text-dark">
+                                        <CardBody>
+                                            <Card>
+                                                <CardBody>
+                                                    <div>
+                                                    <p>
+                                                        <strong>Name: </strong> {name}
+                                                    </p>
+                                                    </div>
+
+                                                    <div>
+                                                    <p>
+                                                        <strong>Age: </strong> {age}
+                                                    </p>
+                                                    </div>
+
+                                                    <div>
+                                                    <p>
+                                                        <strong>Gender: </strong> {gender}
+                                                    </p>
+                                                    </div>
+
+                                                    <div>
+                                                    <p>
+                                                        <strong>Contact: </strong> {phn_num}
+                                                    </p>
+                                                    </div>
+
+                                                    <div>
+                                                    <p>
+                                                        <strong>Disease: </strong> {disease}
+                                                    </p>
+                                                    </div>
+
+                                                    <div>
+                                                    <p>
+                                                        <strong>Weight: </strong> {weight}
+                                                    </p>
+                                                    </div>
+
+                                                    <div>
+                                                    <p>
+                                                        <strong>Height: </strong> {height}
+                                                    </p>
+                                                    </div>
+
+                                                    <div>
+                                                    <p>
+                                                        <strong>Status: </strong> {status}
+                                                    </p>
+                                                    </div>
+
+                                                    <div>
+                                                    <p>
+                                                        <strong>Attendee: </strong> {attendee}
+                                                    </p>
+                                                    </div>
+                                                </CardBody>
+                                            </Card>
+                                        </CardBody>
+                                    </Card>
                                 </Tab> 
                             </Tabs>
                             
                             <br></br>
 
-                            <Col md={12}>
-                                <div style={{color:"blue"}}>
-                                    <strong>Complaints and Symptoms</strong>
-                                    <br></br>
-                                    <br></br>
-                                    <div style={{color:"black"}}>
-                                        Acute abdominal pain
-                                    </div>
-                                    <div style={{color:"black"}}>
-                                        {disease}
-                                    </div>
-                                </div>
-                            </Col>
-                            
                         </Card.Body>
 
                     </Card>
@@ -243,7 +327,7 @@ const PatientDetail = () => {
                                 }
 
                                 return (
-                                    <Card key={item.activitylog_id}>
+                                    <Card key={item.activitylog_id} style={{ marginBottom: '10px' }}>
                                         <Card.Body>
                                             <p style={{ margin: 0 }}>
                                                 {name}

@@ -223,8 +223,8 @@ const Prescription = () => {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>Doctor ID</th>  
-                        <th>Patient ID</th>
+                        <th>Doctor</th>  
+                        <th>Patient</th>
                         <th>Medicine Prescribed</th>
                         <th>Description</th>
                         <th>Next Visit</th>
@@ -248,8 +248,8 @@ const Prescription = () => {
                     {
                             prescriptions.map(item => (
                                 <tr key={item.prescription_id}>
-                                    <td>{item.doctor_id}</td>
-                                    <td>{item.patient_id}</td>
+                                    <td>{item.doctor.name}</td>
+                                    <td>{item.patient.name}</td>
                                     <td>{item.medicines}</td>
                                     <td>{item.description}</td>
                                     <td>{item.next_visit}</td>

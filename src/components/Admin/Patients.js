@@ -392,12 +392,18 @@ const Patients = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>Status</Form.Label>
-                            <Form.Control 
-                                type="text"
+                            <Form.Label>Patient Status</Form.Label>
+                            <Form.Select
+                                aria-label="Patient status select"
                                 value={status}
-                                onChange={(e) => setStatus(e.target.value)}/>
+                                onChange={(e) => setStatus(e.target.value)}
+                            >
+                                <option value="">Select...</option>
+                                <option value="discharged">Discharged</option>
+                                <option value="admitted">Admitted</option>
+                            </Form.Select>
                         </Form.Group>
+
 
                     </Form>
 

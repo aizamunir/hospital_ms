@@ -258,7 +258,7 @@ const PatientDetail = () => {
 
                                                     <div>
                                                     <p>
-                                                        <strong>Phone Number: </strong> {phn_num}
+                                                        <strong>Contact: </strong> {phn_num}
                                                     </p>
                                                     </div>
 
